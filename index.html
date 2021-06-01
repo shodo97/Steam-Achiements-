@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <form class="userinputs">
+		<button id="GetPlayerAchievements">Get Player Achievements</button>
+   </form> 
+	<div class="data">Achievements done
+		<ol class="aa"></ol>
+	</div>
+</body>
+<script>
+
+document.addEventListener('DOMContentLoaded', GetPlayerAchievementsButton);
+
+function GetPlayerAchievementsButton(){
+	document.getElementById('GetPlayerAchievements').addEventListener('click', function(event) {
+		console.log("clicked");
+	var homeURL = "http://localhost:3000/getplayerachievements/?"
+	var req = new XMLHttpRequest();
+	
+	req.open("GET", homeURL, true);
+	req.addEventListener('load', function(){
+		if(req.status>= 200 && req.status<400){
+		var response = JSON.parse(req.responseText);
+		
+		var achievements = response.playerstats.achievements;
+		
+		//console.log(response.playerstats.achievements);
+		var ach = achievements.filter(achi => achi.achieved == 0);
+		//console.log(ach);
+		console.log(response);
+		var tb = document.querySelector('.aa');
+		for(var p = 0 ; p<ach.length ; p++){
+			var node = document.createElement('li');
+			var textnode= document.createTextNode(ach[p].apiname);
+			node.appendChild(textnode);
+			tb.appendChild(node);
+		}
+		
+		
+		//var ach_name = document.createElement(ach.apiname)
+			
+		
+
+		}
+			else {
+				console.log("Error in network request: " + request.statusText);
+			}
+	});
+	req.send(null);
+	event.preventDefault();
+});
+}
+
+</script>
+</html>
